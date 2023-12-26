@@ -1,6 +1,6 @@
-Dotenv :
-  PORT=(the port you are using)
-  DB_HOST=(db uri)
-  DB_KEY=(our db api key)
+<p>Dotenv :</p>
 
-  GOOGLE_KEY=(google maps api key)
+  <p>PORT=(the port you are using)</p>
+  <p>DB_HOST=(db uri)</p>
+  <p>DB_KEY=(our db api key)</p>
+  <p>GOOGLE_KEY=(google maps api key)</p>
