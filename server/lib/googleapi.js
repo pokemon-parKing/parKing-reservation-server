@@ -5,22 +5,24 @@ const google = new Client({});
 
 // takes in an address in some form (string based is fine)
 const createGeocode = (address) => {
-  // uses the address object to the google maps geocode api
-  // onces the results are back we return a modified version of the address that includes the lat/lng
-  let addressString =  `${address.address} ${address.city}, ${address.state} ${address.zip}`;
-  const query = {
-    params: key: process.env.GOOGLE_KEY,
-    address: addressString
-  };
-  google.geocode(query)
-    .then(results => {
-      const coord = JSON.stringify(response.data.results[0].geometry.location);
-      return coord;
-    })
-    .catch(err => {
-      console.log(err);
-      return null;
-    })
+  return new Promise((resolve, reject) => {
+    // let addressString =  `${address.address} ${address.city}, ${address.state} ${address.zip}`;
+    const query = {
+      params: {
+        key: process.env.GOOGLE_KEY,
+        address
+      }
+    };
+    google.geocode(query)
+      .then(results => {
+        if (results.data.status !== 'OK') {
+          return reject('No results');
+        }
+        const coord = JSON.stringify(results.data.results[0].geometry.location);
+        console.log(coord);
+        return resolve(coord);
+      })
+  })
 }
 
 const getClosestLocation = (origin, targets) => {
@@ -31,5 +33,4 @@ const getClosestLocation = (origin, targets) => {
   // use array reduce to find and return the location thats closest
 }
 
-module.exports = google;
-
+module.exports = { createGeocode };

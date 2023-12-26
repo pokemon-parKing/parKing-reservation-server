@@ -1,9 +1,8 @@
-const { getGarages, testAllReservations } = require('../controllers/reservationController.js');
 const reservationRouter = require('express').Router();
+const { getGarages, testAllReservations } = require('../controllers/reservationController.js');
 
 reservationRouter.route('/')
   .get(async (req, res) => {
-    console.log(req.query);
     const list = await getGarages(req.query);
     if (list) {
       res.status(200).json(list);
@@ -21,7 +20,6 @@ reservationRouter.route('/test')
       res.sendStatus(500);
     }
   })
-
 
 
 module.exports = reservationRouter;
