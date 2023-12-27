@@ -32,7 +32,6 @@ reservationRouter.route('/test')
 
 reservationRouter.route('/:garage_id')
   .get(async (req, res) => {
-    console.log(req.params, req.query);
     const list = await getAllReservations({ garage_id: req.params.garage_id, date: req.query.date });
     if (list) {
       res.status(200).json(list);
