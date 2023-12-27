@@ -23,7 +23,7 @@ const createGeocode = (address) => {
         return resolve(coord);
       })
   })
-}
+};
 
 const getClosestLocation = (origin, targets) => {
   // origin is the target location for the client
