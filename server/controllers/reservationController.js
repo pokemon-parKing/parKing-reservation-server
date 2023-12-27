@@ -96,4 +96,4 @@ const createReservation = async (reservation) => {
 */
 
 
-module.exports = { getGarages, getAllReservations, testAllReservations, createReservation }
+module.exports = { getGarages, getAllReservations, testAllReservations, createReservation };
