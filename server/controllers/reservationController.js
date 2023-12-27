@@ -15,16 +15,15 @@ const getGarages = async (address) => {
     console.log(error);
     return null;
   }
-}
+};
 
-const getAllReservations = async (garageId, date) => {
-  // we figure out which garage is closest to the origin location
-  // we will grab all reservations tied to this garage
-  // format that data in some way and return it
+const getAllReservations = async (query) => {
+  const { garage_id, date } = query;
   try {
     const { data, error } = await Reservations
       .select()
-      .match({ 'id': garageId, date });
+      .match({ 'garage_id': garage_id, 'date': date })
+      .filter('status', 'in', '("reserved","checked-in")');
 
       if (error) throw error;
 
@@ -57,11 +56,11 @@ const getAllReservations = async (garageId, date) => {
   }
 }
 
-const testAllReservations = async (garageId) => {
+const testAllReservations = async (garage_id) => {
   try {
     const { data, error } = await Reservations
-    .select()
-    .eq('id', garageId);
+      .select()
+      .eq('garage_id', garage_id);
 
     if (error) throw error;
 
@@ -72,8 +71,19 @@ const testAllReservations = async (garageId) => {
   }
 }
 
-const createReservation = () => {
+const createReservation = async (reservation) => {
+  try {
+    const { data, error } = await Reservations
+      .insert(reservation)
+      .select();
 
+    if (error) throw error;
+
+    return await data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 /*
@@ -86,4 +96,4 @@ const createReservation = () => {
 */
 
 
-module.exports = { getGarages, getAllReservations, testAllReservations }
+module.exports = { getGarages, getAllReservations, testAllReservations, createReservation }
