@@ -1,7 +1,13 @@
-const reservationRouter = require('express').Router();
-const { getGarages, testAllReservations, createReservation, getAllReservations } = require('../controllers/reservationController.js');
+const reservationRouter = require("express").Router();
+const {
+  getGarages,
+  testAllReservations,
+  createReservation,
+  getAllReservations,
+} = require("../controllers/reservationController.js");
 
-reservationRouter.route('/')
+reservationRouter
+  .route("/")
   .get(async (req, res) => {
     const list = await getGarages(req.query);
     if (list) {
@@ -17,27 +23,27 @@ reservationRouter.route('/')
     } else {
       res.sendStatus(500);
     }
-  })
+  });
 
-reservationRouter.route('/test')
-  .get(async (req, res) => {
-    const list = await testAllReservations(req.query);
-    if (list) {
-      res.status(200).json(list);
-    } else {
-      res.sendStatus(500);
-    }
-  })
+reservationRouter.route("/test").get(async (req, res) => {
+  const list = await testAllReservations(req.query.garage_id);
+  if (list) {
+    res.status(200).json(list);
+  } else {
+    res.sendStatus(500);
+  }
+});
 
-reservationRouter.route('/:garage_id')
-  .get(async (req, res) => {
-    const list = await getAllReservations({ garage_id: req.params.garage_id, date: req.query.date })
-    if (list) {
-      res.status(200).json(list);
-    } else {
-      res.sendStatus(500);
-    }
-  })
-
+reservationRouter.route("/:garage_id").get(async (req, res) => {
+  const list = await getAllReservations({
+    garage_id: req.params.garage_id,
+    date: req.query.date,
+  });
+  if (list) {
+    res.status(200).json(list);
+  } else {
+    res.sendStatus(500);
+  }
+});
 
 module.exports = reservationRouter;
