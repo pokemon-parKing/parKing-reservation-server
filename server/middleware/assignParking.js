@@ -1,10 +1,5 @@
 const { ParkingSpots, Reservations } = require('../db.js');
 
-
-// need to do a join table
-// get all parking spots in ascending order
-  // where reservations at that time/date doesn't exist
-
 const assignParking = async (req, res, next) => {
   const { data: ParkingData, error: ParkingError } = await ParkingSpots
     .select(`id`)
