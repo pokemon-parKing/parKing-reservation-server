@@ -2,7 +2,8 @@ const { Reservations, Garages } = require('../db.js');
 
 /*
   params are based on user's input,
-  expected { lat: number, lng, number } (the request will convert to a string but it is converted back in the code)
+  expected { lat: number, lng, number }
+  (the request will convert to a string but it is converted back in the code)
 */
 const getNearestGarages = async (params) => {
   const { lat, lng } = params;
@@ -24,6 +25,14 @@ const getNearestGarages = async (params) => {
   }
 };
 
+
+/*
+  query are based on user's input,
+  expected values: garage_id (string) & date (string)
+  garage will be in the end point path (/reservations/:garage_id)
+  date is expected from the string
+  --- logic for consolidating this is handled on the route file
+*/
 const getAllReservations = async (query) => {
   const { garage_id, date } = query;
   try {
@@ -63,6 +72,9 @@ const getAllReservations = async (query) => {
   }
 }
 
+/*
+  PURELY FOR TESTING - to be deleted in production
+*/
 const testAllReservations = async (garage_id) => {
   try {
     const { data, error } = await Reservations
@@ -78,6 +90,17 @@ const testAllReservations = async (garage_id) => {
   }
 }
 
+/*
+  reservation values are based on user's input in the body of the request,
+  expected/required {
+     garage_id: number,
+      time: number (1-24),
+      user_id: string,
+      date: string ('12-3-21')
+      car_id: number,
+  }
+  (parking_spot_id is taken care of by the middleware, status is defaulted to reserved)
+*/
 const createReservation = async (reservation) => {
   try {
     const { data, error } = await Reservations
