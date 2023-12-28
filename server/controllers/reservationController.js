@@ -1,5 +1,9 @@
 const { Reservations, Garages } = require('../db.js');
 
+/*
+  params are based on user's input,
+  expected { lat: number, lng, number } (the request will convert to a string but it is converted back in the code)
+*/
 const getNearestGarages = async (params) => {
   const { lat, lng } = params;
 
