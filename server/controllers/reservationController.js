@@ -102,7 +102,6 @@ const testAllReservations = async (garage_id) => {
   (parking_spot_id is taken care of by the middleware, status is defaulted to reserved)
 */
 const createReservation = async (reservation) => {
-  console.log(reservation)
   try {
     const { data, error } = await Reservations
       .insert(reservation)
