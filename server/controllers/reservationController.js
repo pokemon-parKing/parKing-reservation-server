@@ -1,19 +1,12 @@
 const { Reservations, Garages } = require('../db.js');
 
-/*
-  params are based on user's input,
-  expected { lat: number, lng, number } (the request will convert to a string but it is converted back in the code)
-*/
-const getNearestGarages = async (params) => {
-  const { lat, lng } = params;
+const getGarages = async (address) => {
+  const { city, zip } = address;
 
   try {
     const { data, error } = await Garages
       .select()
-      .filter('lat','gte',+lat-0.5)
-      .filter('lat','lte',+lat+0.5)
-      .filter('lng','gte',+lng-0.5)
-      .filter('lng','lte',+lng+0.5)
+      .or(`city.eq.${city},zip.eq.${zip}`);
 
     if (error) throw error;
 
@@ -93,4 +86,14 @@ const createReservation = async (reservation) => {
   }
 }
 
-module.exports = { getNearestGarages, getAllReservations, testAllReservations, createReservation };
+/*
+ garage: {},
+ reservations:
+ {
+    10-5-21: [{ reservation }],
+
+ }
+*/
+
+
+module.exports = { getGarages, getAllReservations, testAllReservations, createReservation }
