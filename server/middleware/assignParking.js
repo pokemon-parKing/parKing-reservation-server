@@ -27,6 +27,10 @@ const assignParking = async (req, res, next) => {
     }
   }
 
+  if (ReservationData.length === 0) {
+    parkingSpot = ParkingData[0].id
+  }
+
   if (!parkingSpot) {
     return res.sendStatus(400);
   }
