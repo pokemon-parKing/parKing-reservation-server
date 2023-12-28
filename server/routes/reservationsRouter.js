@@ -1,10 +1,10 @@
 const reservationRouter = require('express').Router();
-const { getGarages, testAllReservations, createReservation, getAllReservations } = require('../controllers/reservationController.js');
+const { getNearestGarages, testAllReservations, createReservation, getAllReservations } = require('../controllers/reservationController.js');
 const assignParking = require('../middleware/assignParking.js');
 
 reservationRouter.route('/')
   .get(async (req, res) => {
-    const list = await getGarages(req.query);
+    const list = await getNearestGarages(req.query);
     if (list) {
       res.status(200).json(list);
     } else {

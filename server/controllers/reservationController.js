@@ -1,12 +1,15 @@
 const { Reservations, Garages } = require('../db.js');
 
-const getGarages = async (address) => {
-  const { city, zip } = address;
+const getNearestGarages = async (params) => {
+  const { lat, lng } = params;
 
   try {
     const { data, error } = await Garages
       .select()
-      .or(`city.eq.${city},zip.eq.${zip}`);
+      .filter('lat','gte',+lat-0.5)
+      .filter('lat','lte',+lat+0.5)
+      .filter('lng','gte',+lng-0.5)
+      .filter('lng','lte',+lng+0.5)
 
     if (error) throw error;
 
@@ -86,14 +89,4 @@ const createReservation = async (reservation) => {
   }
 }
 
-/*
- garage: {},
- reservations:
- {
-    10-5-21: [{ reservation }],
-
- }
-*/
-
-
-module.exports = { getGarages, getAllReservations, testAllReservations, createReservation };
+module.exports = { getNearestGarages, getAllReservations, testAllReservations, createReservation };

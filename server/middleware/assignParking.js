@@ -33,7 +33,7 @@ const assignParking = async (req, res, next) => {
   }
 
   if (!parkingSpot) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
   req.body['parking_spot_id'] = parkingSpot;
   next();
