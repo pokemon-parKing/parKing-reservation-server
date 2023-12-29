@@ -1,4 +1,4 @@
-const { Reservations, Garages } = require('../db.js');
+const supabase = require('../db.js');
 
 /*
   params are based on user's input,
@@ -9,7 +9,7 @@ const getNearestGarages = async (params) => {
   const { lat, lng } = params;
 
   try {
-    const { data, error } = await Garages
+    const { data, error } = await supabase.from('garages')
       .select()
       .filter('lat','gte',+lat-0.5)
       .filter('lat','lte',+lat+0.5)
@@ -31,7 +31,7 @@ const getNearestGarages = async (params) => {
 */
 const getReservation = async (id) => {
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .select()
       .eq('id', id)
       .single();
@@ -55,7 +55,7 @@ const getReservation = async (id) => {
 const getAllReservations = async (query) => {
   const { garage_id, date } = query;
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .select()
       .match({ 'garage_id': garage_id, 'date': date })
       .filter('status', 'in', '("reserved","checked-in")');
@@ -96,7 +96,7 @@ const getAllReservations = async (query) => {
 */
 const testAllReservations = async (garage_id) => {
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .select()
       .eq('garage_id', garage_id);
 
@@ -122,7 +122,7 @@ const testAllReservations = async (garage_id) => {
 */
 const createReservation = async (reservation) => {
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .insert(reservation)
       .select();
 
@@ -142,15 +142,14 @@ const createReservation = async (reservation) => {
   status must be one of the following ['checked-in', 'picked-up', 'cancelled'];
 */
 const updateReservation = async (query) => {
-  console.log(query)
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .update({ status: query.status })
-      .eq('id', query.reservation_id)
+      .eq('id', query.id)
       .select();
 
     if (error) throw error;
-    console.log(data);
+
     return await data;
   } catch (error) {
     console.log(error);

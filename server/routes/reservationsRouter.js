@@ -32,8 +32,8 @@ reservationRouter.route('/:reservation_id')
       res.sendStatus(500);
     }
   })
-  .patch(async (req, res) => {
-    const updated = await updateReservation({ reservation_id: +req.params.reservation_id, status: req.query.status });
+  .put(async (req, res) => {
+    const updated = await updateReservation({ id: +req.params.reservation_id, status: req.query.status });
     if (updated) {
       res.sendStatus(200);
     } else {

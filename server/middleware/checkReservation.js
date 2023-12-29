@@ -1,8 +1,8 @@
-const { Reservations } = require('../db.js');
+const supabase = require('../db.js');
 
 const checkReservation = async (req, res, next) => {
   try {
-    const { data, error } = await Reservations
+    const { data, error } = await supabase.from('reservations')
       .select()
       .eq('car_id', req.body.car_id)
       .in('status', ['reserved', 'checked-in'])
