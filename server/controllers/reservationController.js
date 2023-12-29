@@ -25,6 +25,25 @@ const getNearestGarages = async (params) => {
   }
 };
 
+/*
+  id is given from the path and passed in here from the route
+  we return the full reservation row from the database
+*/
+const getReservation = async (id) => {
+  try {
+    const { data, error } = await Reservations
+      .select()
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+
+    return await data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
 /*
   query are based on user's input,
@@ -140,4 +159,5 @@ const updateReservation = async (query) => {
 }
 
 module.exports = { getNearestGarages, getAllReservations,
-  testAllReservations, createReservation, updateReservation };
+  testAllReservations, createReservation,
+  updateReservation, getReservation };
