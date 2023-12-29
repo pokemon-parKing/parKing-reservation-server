@@ -32,7 +32,7 @@ reservationRouter.route('/:reservation_id')
       res.sendStatus(500);
     }
   })
-  .put(async (req, res) => {
+  .patch(async (req, res) => {
     const updated = await updateReservation({ id: +req.params.reservation_id, status: req.query.status });
     if (updated) {
       res.sendStatus(200);
