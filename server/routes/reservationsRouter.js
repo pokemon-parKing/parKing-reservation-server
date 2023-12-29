@@ -32,8 +32,8 @@ reservationRouter.route('/:garage_id')
   })
 
 reservationRouter.route('/:reservation_id')
-  .put(async (req, res) => {
-    const updated = await updateReservation({ reservation_id: req.params.reservation_id, status: req.query.status });
+  .patch(async (req, res) => {
+    const updated = await updateReservation({ reservation_id: +req.params.reservation_id, status: req.query.status });
     if (updated) {
       res.sendStatus(200);
     } else {
@@ -42,13 +42,13 @@ reservationRouter.route('/:reservation_id')
   })
 
 reservationRouter.route('/test')
-.get(async (req, res) => {
-  const list = await testAllReservations(req.query);
-  if (list) {
-    res.status(200).json(list);
-  } else {
-    res.sendStatus(500);
-  }
-})
+  .get(async (req, res) => {
+    const list = await testAllReservations(req.query);
+    if (list) {
+      res.status(200).json(list);
+    } else {
+      res.sendStatus(500);
+    }
+  })
 
 module.exports = reservationRouter;
