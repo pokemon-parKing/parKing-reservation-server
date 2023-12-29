@@ -1,7 +1,6 @@
 const reservationRouter = require('express').Router();
 const { getNearestGarages, testAllReservations,
   createReservation, getAllReservations, updateReservation } = require('../controllers/reservationController.js');
-const { getNearestGarages, testAllReservations, createReservation, getAllReservations } = require('../controllers/reservationController.js');
 const { getOccupiedSpots, getReservedSpots, getAvailableSpots } = require('../controllers/valetReservationController.js');
 const assignParking = require('../middleware/assignParking.js');
 
