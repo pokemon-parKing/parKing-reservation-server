@@ -94,7 +94,7 @@ const testAllReservations = async (garage_id) => {
   reservation values are based on user's input in the body of the request,
   expected/required {
      garage_id: number,
-      time: number (1-24),
+      time: number (0-23),
       user_id: string,
       date: string ('12-3-21')
       car_id: number,
@@ -116,4 +116,28 @@ const createReservation = async (reservation) => {
   }
 }
 
-module.exports = { getNearestGarages, getAllReservations, testAllReservations, createReservation };
+/*
+  query contains { reservation_id, status } both strings
+  reservation id is from the path query and status is from the params
+  This is consolidated in the route handler and passed here to the controller
+  status must be one of the following ['checked-in', 'picked-up', 'cancelled'];
+*/
+const updateReservation = async (query) => {
+  console.log(query)
+  try {
+    const { data, error } = await Reservations
+      .update({ status: query.status })
+      .eq('id', query.reservation_id)
+      .select();
+
+    if (error) throw error;
+    console.log(data);
+    return await data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+module.exports = { getNearestGarages, getAllReservations,
+  testAllReservations, createReservation, updateReservation };
