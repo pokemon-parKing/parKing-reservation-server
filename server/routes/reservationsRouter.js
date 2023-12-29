@@ -1,5 +1,6 @@
 const reservationRouter = require('express').Router();
 const { getNearestGarages, testAllReservations, createReservation, getAllReservations } = require('../controllers/reservationController.js');
+const { getOccupiedSpots, getReservedSpots, getAvailableSpots } = require('../controllers/valetReservationController.js');
 const assignParking = require('../middleware/assignParking.js');
 
 reservationRouter.route('/')
@@ -40,5 +41,16 @@ reservationRouter.route('/:garage_id')
     }
   })
 
+reservationRouter.route('/valet/:garage_id')
+  .get(async (req, res) => {
+    const occupied = await getOccupiedSpots(req.params);
+    const reserved = await getReservedSpots(req.params);
+    const available = await getAvailableSpots(req.params);
+    if (occupied !== null && reserved !== null && available !== null) {
+      res.status(200).json({ occupied, reserved, available });
+    } else {
+      res.sendStatus(500);
+    }
+  })
 
 module.exports = reservationRouter;
