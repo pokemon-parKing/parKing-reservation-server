@@ -3,6 +3,7 @@ const { getNearestGarages, testAllReservations,
   createReservation, getAllReservations,
   getReservation, updateReservation } = require('../controllers/reservationController.js');
 const assignParking = require('../middleware/assignParking.js');
+const checkReservation = require('../middleware/checkReservation.js');
 
 reservationRouter.route('/')
   .get(async (req, res) => {
@@ -13,7 +14,7 @@ reservationRouter.route('/')
       res.sendStatus(500);
     }
   })
-  .post(assignParking, async (req, res) => {
+  .post(checkReservation, assignParking, async (req, res) => {
     const inserted = await createReservation(req.body);
     if (inserted) {
       res.sendStatus(201);
@@ -41,17 +42,17 @@ reservationRouter.route('/:reservation_id')
   })
 
 reservationRouter.route('/garage/:garage_id')
-.get(async (req, res) => {
-  if (!req.query.date) {
-    return res.sendStatus(400);
-  }
-  const list = await getAllReservations({ garage_id: req.params.garage_id, date: req.query.date });
-  if (list) {
-    res.status(200).json(list);
-  } else {
-    res.sendStatus(500);
-  }
-})
+  .get(async (req, res) => {
+    if (!req.query.date) {
+      return res.sendStatus(400);
+    }
+    const list = await getAllReservations({ garage_id: req.params.garage_id, date: req.query.date });
+    if (list) {
+      res.status(200).json(list);
+    } else {
+      res.sendStatus(500);
+    }
+  })
 
 reservationRouter.route('/test')
   .get(async (req, res) => {
