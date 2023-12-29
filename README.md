@@ -151,5 +151,19 @@ GOOGLE_KEY=(google maps api key)
   
 </details>
 
+<details>
+  <summary>/reservations/:reservation_id [PATCH]</summary>
+  <p></p>
+  <div>Request: </div>
+    
+    params: { status: string ['checked-in', 'picked-up', 'cancelled'] }
+
+  <p></p>
+  <div>Response:</div>
+
+    status response of 200
+  
+</details>
+
 <p align="right"><a href="#readme-top">back to top</a></p>
 

@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require('express');
 const reservationRouter = require('./routes/reservationsRouter.js');
 const geocodeRouter = require('./routes/geocodeRouter.js');
@@ -7,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
+app.use(cors());
 app.use(morgan('dev'));
 
 // send a query with address key (in the form of a string)
