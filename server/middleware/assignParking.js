@@ -19,8 +19,8 @@ const assignParking = async (req, res, next) => {
   let parkingSpot;
 
   while (!parkingSpot && ParkingData.length > 0 && ReservationData.length > 0) {
-    const spot = ParkingData.shift();
-    const reservation = ReservationData.shift();
+    const spot = await ParkingData.shift();
+    const reservation = await ReservationData.shift();
 
     if (spot.id !== reservation.parking_spot_id) {
       parkingSpot = spot.id;
@@ -28,7 +28,7 @@ const assignParking = async (req, res, next) => {
   }
 
   if (ReservationData.length === 0) {
-    parkingSpot = ParkingData[0].id
+    parkingSpot = await ParkingData[0].id
   }
 
   if (!parkingSpot) {
