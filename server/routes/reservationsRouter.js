@@ -64,36 +64,4 @@ reservationRouter.route('/test')
     }
   })
 
-reservationRouter.route('/valet/:garage_id')
-  .get(async (req, res) => {
-    const occupied = await getOccupiedSpots({ garage_id: req.params.garage_id, date: req.query.date });
-    const reserved = await getReservedSpots({ garage_id: req.params.garage_id, date: req.query.date });
-    const available = await getAvailableSpots({ garage_id: req.params.garage_id, date: req.query.date });
-    if (occupied !== null && reserved !== null && available !== null) {
-      res.status(200).json({ occupied, reserved, available });
-    } else {
-      res.sendStatus(500);
-    }
-  })
-
-reservationRouter.route('/valet/list/:garage_id')
-  .get(async (req, res) => {
-    const data = await getReservationsList({ garage_id: req.params.garage_id, date: req.query.date });
-    if (data) {
-      res.status(200).json(data);
-    } else {
-      res.sendStatus(500);
-    }
-  })
-
-reservationRouter.route('/valet/detail/:reservation_id')
-  .get(async (req, res) => {
-    const data = await getReservationDetails({ reservation_id: req.params.reservation_id });
-    if (data) {
-      res.status(200).json(data);
-    } else {
-      res.sendStatus(500);
-    }
-  })
-
 module.exports = reservationRouter;
