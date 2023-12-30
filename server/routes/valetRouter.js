@@ -3,9 +3,9 @@ const { getOccupiedSpots, getReservedSpots, getAvailableSpots, getReservationsLi
 
 valetRouter.route('/:garage_id')
   .get(async (req, res) => {
-    const occupied = await getOccupiedSpots({ garage_id: req.params.garage_id, date: req.query.date });
-    const reserved = await getReservedSpots({ garage_id: req.params.garage_id, date: req.query.date });
-    const available = await getAvailableSpots({ garage_id: req.params.garage_id, date: req.query.date });
+    const occupied = await getOccupiedSpots({ garage_id: req.params.garage_id, date: req.query.date, time: req.query.time });
+    const reserved = await getReservedSpots({ garage_id: req.params.garage_id, date: req.query.date, time: req.query.time });
+    const available = await getAvailableSpots({ garage_id: req.params.garage_id, date: req.query.date, time: req.query.time });
     if (occupied !== null && reserved !== null && available !== null) {
       res.status(200).json({ occupied, reserved, available });
     } else {

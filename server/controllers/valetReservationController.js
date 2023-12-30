@@ -1,11 +1,11 @@
 const supabase = require('../db');
 
 const getOccupiedSpots = async (params) => {
-  const { garage_id, date } = params;
+  const { garage_id, date, time } = params;
   try {
     const { data, error } = await supabase.from('reservations')
       .select()
-      .match({ 'garage_id': garage_id, 'date': date, 'status': 'checked-in' });
+      .match({ 'garage_id': garage_id, 'date': date, 'time': time, 'status': 'checked-in' });
 
     if (error) throw error;
     console.log('this is the data from occupiedSpots:', data);
@@ -17,11 +17,11 @@ const getOccupiedSpots = async (params) => {
 }
 
 const getReservedSpots = async (params) => {
-  const { garage_id, date } = params;
+  const { garage_id, date, time } = params;
   try {
     const { data, error } = await supabase.from('reservations')
       .select()
-      .match({ 'garage_id': garage_id, 'date': date, 'status': 'reserved' });
+      .match({ 'garage_id': garage_id, 'date': date, 'time': time, 'status': 'reserved' });
 
     if (error) throw error;
     console.log('this is the data from reservedSpots:', data);
@@ -33,17 +33,17 @@ const getReservedSpots = async (params) => {
 }
 //use this function in conjunction with getOccupiedSpots and getReservedSpots to calculate for the number of available spots. Ex: allSpots - (occupiedSpots + reservedSpots) = available spots
 const getAvailableSpots = async (params) => {
-  const { garage_id, date } = params;
+  const { garage_id, date, time } = params;
   const occupied = await getOccupiedSpots(params);
   const reserved = await getReservedSpots(params);
   try {
-    const { data, error } = await supabase.from('parking_spots')
-      .select()
-      .eq('garage_id', garage_id);
+    const { data, error } = await supabase.from('garages')
+      .select('spots')
+      .eq('id', garage_id);
 
     if (error) throw error;
-
-    return await data.length - (occupied + reserved);
+    console.log('this is the data from availableSpots:', data);
+    return await data[0].spots - (occupied + reserved);
   } catch (error) {
     console.log(error);
     return null;
