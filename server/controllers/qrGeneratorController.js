@@ -1,5 +1,4 @@
-const { Reservations } = require('../db.js');
-const { supabase } = require('../db');
+const supabase = require('../db');
 const QRCode = require('qrcode');
 const fs = require('fs').promises;
 const { createReadStream } = require('fs')

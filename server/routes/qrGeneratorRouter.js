@@ -1,5 +1,4 @@
 const qrGeneratorRouter = require('express').Router();
-const { Reservations } = require('../db');
 const { generateAndStoreQRCode } = require('../controllers/qrGeneratorController');
 const QRCode = require('qrcode');
 
