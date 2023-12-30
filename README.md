@@ -138,16 +138,16 @@ GOOGLE_KEY=(google maps api key)
 </details>
 
 <details>
-  <summary>/reservations/:garage_id [GET]</summary>
+  <summary>/reservations/:reservation_id [GET]</summary>
   <p></p>
   <div>Request: </div>
     
-    params: { date: string ('12-3-21') }
+    query must contain a valid reservation_id
 
   <p></p>
   <div>Response:</div>
 
-    { "1": 20, "2": 12 } - an object with keys representing the hour(time) and a value that represents current # of reservations/checked-in
+    { id, parking_spot_id, date, time, car_id, status, garage_id, user_id }
   
 </details>
 
@@ -164,6 +164,21 @@ GOOGLE_KEY=(google maps api key)
     status response of 200
   
 </details>
+
+<details>
+  <summary>/reservations/garage/:garage_id [GET]</summary>
+  <p></p>
+  <div>Request: </div>
+    
+    params: { date: string ('12-3-21') }
+
+  <p></p>
+  <div>Response:</div>
+
+    { "1": 20, "2": 12 } - an object with keys representing the hour(time) and a value that represents current # of reservations/checked-in
+  
+</details>
+
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
