@@ -1,12 +1,12 @@
-const { ParkingSpots, Reservations } = require('../db.js');
+const supabase = require('../db.js');
 
 const assignParking = async (req, res, next) => {
-  const { data: ParkingData, error: ParkingError } = await ParkingSpots
+  const { data: ParkingData, error: ParkingError } = await supabase.from('parking_spots')
     .select(`id`)
     .eq('garage_id', req.body.garage_id)
     .order('id', { ascending: true })
 
-  const { data: ReservationData, error: ReservationError } = await Reservations
+  const { data: ReservationData, error: ReservationError } = await supabase.from('reservations')
     .select(`parking_spot_id`)
     .match({ date: req.body.date, time: req.body.time, garage_id: req.body.garage_id })
     .order('parking_spot_id', { ascending: true })
@@ -19,8 +19,8 @@ const assignParking = async (req, res, next) => {
   let parkingSpot;
 
   while (!parkingSpot && ParkingData.length > 0 && ReservationData.length > 0) {
-    const spot = ParkingData.shift();
-    const reservation = ReservationData.shift();
+    const spot = await ParkingData.shift();
+    const reservation = await ReservationData.shift();
 
     if (spot.id !== reservation.parking_spot_id) {
       parkingSpot = spot.id;
@@ -28,7 +28,7 @@ const assignParking = async (req, res, next) => {
   }
 
   if (ReservationData.length === 0) {
-    parkingSpot = ParkingData[0].id
+    parkingSpot = await ParkingData[0].id
   }
 
   if (!parkingSpot) {
