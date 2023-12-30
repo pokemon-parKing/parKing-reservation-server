@@ -1,34 +1,39 @@
 const { Reservations } = require('../db.js');
 const { supabase } = require('../db');
 const QRCode = require('qrcode');
+const fs = require('fs').promises;
+const { createReadStream } = require('fs')
+const path = require('path');
 
-async function generateAndStoreQRCode(reservationId) {
-  console.log('Generating QR code for reservation ID:', reservationId);
+async function generateAndStoreQRCode(yourUrl, reservationId) {
   try {
-    const qrCodeBuffer = await QRCode.toBuffer(reservationId);
-    // console.log('QR code buffer:', qrCodeBuffer); // uncomment to see the buffer.
+    //route to the tempImage storage
+    const tempImagesDir = path.join(__dirname, '../tempImages');
+
+    //data to encode in the QR code
+    const dataToEncode = `${yourUrl}?reservationId=${reservationId}`
+    //buffer to store the QR code
+    const qrCodeBuffer = await QRCode.toBuffer(dataToEncode);
+    const filePath = `${tempImagesDir}/${reservationId}.png`;
+
+    await fs.writeFile(filePath, qrCodeBuffer);
+
+    const fileContent = await fs.readFile(filePath);
+    // console.log('fileContent: ', fileContent);
 
     const { data, error } = await supabase.storage
-      .from('qrcodes') //the name of the bucket I created in supabase
-      .upload(`${reservationId}.png`, qrCodeBuffer);
+      .from('qrcodes')
+      .upload(`${reservationId}.png`, fileContent, {
+        contentType: 'image/png',
+      });
+      //remove the file from the tempImages folder
+      await fs.unlink(filePath);
 
     if (error) {
       console.error('Error uploading QR code to Supabase:', error);
       return null;
     }
-
-    const qrCodeUrl = data[0].url;
-    console.log('QR code URL:', qrCodeUrl);
-    const { data: updatedReservation, error: updateError } = await Reservations
-      .update({ qrCodeUrl })
-      .eq('id', reservationId);
-
-    if (updateError) {
-      console.error('Error updating reservation with QR code URL:', updateError);
-      return null;
-    }
-
-    return qrCodeUrl;
+    return true;
   } catch (error) {
     console.error('Error generating and uploading QR code:', error);
     return null;

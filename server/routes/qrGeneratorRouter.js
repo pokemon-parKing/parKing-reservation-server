@@ -7,11 +7,12 @@ qrGeneratorRouter
   .post('/:reservationId', async (req, res) => {
 
     const reservationId = req.params.reservationId;
+    const urlToEndcode = req.body.yourUrl
 
-    const imageUrl = await generateAndStoreQRCode(reservationId);
+    const success = await generateAndStoreQRCode(urlToEndcode, reservationId);
 
-    if (imageUrl) {
-      res.json({ success: true, imageUrl });
+    if (success) {
+      res.json({ success: true, message: 'QR code generated and stored successfully.' });
     } else {
       res.json({ success: false, message: 'Failed to generate and store QR code.' });
     }
