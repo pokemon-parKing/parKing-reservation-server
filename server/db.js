@@ -7,4 +7,4 @@ const Reservations = supabase.from('reservations');
 const Garages = supabase.from('garages');
 const ParkingSpots = supabase.from('parking_spots');
 
-module.exports = { Reservations, Garages, ParkingSpots };
+module.exports = { Reservations, Garages, ParkingSpots, supabase };
