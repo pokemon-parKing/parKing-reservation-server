@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const reservationRouter = require('./routes/reservationsRouter.js');
+const valetRouter = require('./routes/valetRouter.js');
 const geocodeRouter = require('./routes/geocodeRouter.js');
 const qrGeneratorRouter = require('./routes/qrGeneratorRouter.js');
 const morgan = require('morgan');
@@ -18,6 +19,7 @@ app.use('/geocode', geocodeRouter);
 // /reservations/test -> gets you all the reservations (need garageId)
 app.use('/reservations', reservationRouter);
 app.use('/qr', qrGeneratorRouter);
+app.use('/reservations/valet', valetRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on PORT:${PORT}`);
