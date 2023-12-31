@@ -4,13 +4,13 @@ const fs = require('fs').promises;
 const { createReadStream } = require('fs')
 const path = require('path');
 
-async function generateAndStoreQRCode(yourUrl, reservationId) {
+  async function generateAndStoreQRCode(reservationId) {
   try {
     //route to the tempImage storage
     const tempImagesDir = path.join(__dirname, '../tempImages');
 
     //data to encode in the QR code
-    const dataToEncode = `${yourUrl}?reservationId=${reservationId}`
+    const dataToEncode = `${reservationId}`
     //buffer to store the QR code
     const qrCodeBuffer = await QRCode.toBuffer(dataToEncode);
     const filePath = `${tempImagesDir}/${reservationId}.png`;
