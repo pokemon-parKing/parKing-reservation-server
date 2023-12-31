@@ -166,22 +166,6 @@ const updateReservation = async (query) => {
   }
 };
 
-// const createReservation = async (reservation) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("reservations")
-//       .insert(reservation)
-//       .select();
-
-//     if (error) throw error;
-
-//     return await data;
-//   } catch (error) {
-//     console.log(error);
-//     return null;
-//   }
-// };
-
 const sendEmail = async (reservationId) => {
   try {
     const { data: combinedData, error: combinedError } = await supabase
