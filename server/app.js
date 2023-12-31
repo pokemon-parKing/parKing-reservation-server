@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const reservationRouter = require('./routes/reservationsRouter.js');
+const valetRouter = require('./routes/valetRouter.js');
 const geocodeRouter = require('./routes/geocodeRouter.js');
 const qrGeneratorRouter = require('./routes/qrGeneratorRouter.js');
 const getQrRouter = require('./routes/getQrRouter.js');
@@ -20,6 +21,7 @@ app.use('/geocode', geocodeRouter);
 app.use('/reservations', reservationRouter);
 // qr --> creates a qr code and stores it in the database
 app.use('/qr', qrGeneratorRouter);
+app.use('/reservations/valet', valetRouter);
 app.use('/getqr', getQrRouter);
 
 app.listen(PORT, () => {
