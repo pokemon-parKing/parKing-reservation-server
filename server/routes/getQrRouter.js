@@ -8,7 +8,6 @@ getQrRouter
       let reservationId = req.params.reservationId;
       const qrCode = await getQrCode(reservationId);
       res.contentType('image/png');
-      // console.log('qrCode: ', qrCode); //uncomment to view direct link in terminal and open in browswer
       res.send(qrCode);
     } catch (error) {
       console.log(error);
