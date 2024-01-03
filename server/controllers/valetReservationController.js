@@ -71,7 +71,7 @@ const getReservationDetails = async (params) => {
   const { reservation_id } = params;
   try {
     const { data, error } = await supabase.from('reservations')
-      .select('time, parking_spot_id, id, date, cars (  make, model, color, license_plate_number  ), accounts (  first_name, last_name, phone_number, email  )')
+      .select('status, time, parking_spot_id, id, date, cars (  make, model, color, license_plate_number  ), accounts (  first_name, last_name, phone_number, email  )')
       .match({ 'id': reservation_id });
 
     if (error) throw error;
