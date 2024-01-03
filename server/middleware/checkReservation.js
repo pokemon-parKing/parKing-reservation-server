@@ -4,14 +4,12 @@ const checkReservation = async (req, res, next) => {
   try {
     const { data, error } = await supabase.from('reservations')
       .select()
-      .eq('car_id', req.body.car_id)
+      .match({ car_id: req.body.car_id, date: req.body.date, time: req.body.time })
       .in('status', ['reserved', 'checked-in'])
-
-    console.log(await data)
 
     if (error) throw error;
 
-    if (await data.length > 0) {
+    if (data.length > 0) {
       return res.sendStatus(409);
     } else {
       next();

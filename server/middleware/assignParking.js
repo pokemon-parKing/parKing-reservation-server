@@ -1,15 +1,16 @@
 const supabase = require('../db.js');
 
 const assignParking = async (req, res, next) => {
-  const { data: ParkingData, error: ParkingError } = await supabase.from('parking_spots')
+  const [{ data: ParkingData, error: ParkingError }, { data: ReservationData, error: ReservationError }] = await Promise.all([
+    supabase.from('parking_spots')
     .select(`id`)
     .eq('garage_id', req.body.garage_id)
-    .order('id', { ascending: true })
-
-  const { data: ReservationData, error: ReservationError } = await supabase.from('reservations')
+    .order('id', { ascending: true }),
+    supabase.from('reservations')
     .select(`parking_spot_id`)
     .match({ date: req.body.date, time: req.body.time, garage_id: req.body.garage_id })
     .order('parking_spot_id', { ascending: true })
+  ]);
 
   if (ParkingError || ReservationError) {
     console.log(ParkingError);
