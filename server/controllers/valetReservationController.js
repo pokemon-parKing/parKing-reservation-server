@@ -56,7 +56,8 @@ const getReservationsList = async (params) => {
     const { data, error } = await supabase.from('reservations')
       .select('id, time, status, parking_spot_id, cars (  make, model, color  )')
       .match({ 'garage_id': garage_id, 'date': date })
-      .filter('status', 'in', '("reserved","checked-in")');
+      .filter('status', 'in', '("reserved","checked-in")')
+      .order('time', { ascending: true });
 
     if (error) throw error;
     console.log('this is the data from resList:', data);
