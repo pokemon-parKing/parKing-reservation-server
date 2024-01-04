@@ -25,12 +25,4 @@ const createGeocode = (address) => {
   })
 };
 
-const getClosestLocation = (origin, targets) => {
-  // origin is the target location for the client
-  // targets are a list of address in our db
-    // each share either a zipcode or city with the origin location
-  // use the google api to get the distances of each target location
-  // use array reduce to find and return the location thats closest
-}
-
 module.exports = { createGeocode };

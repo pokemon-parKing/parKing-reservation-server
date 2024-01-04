@@ -23,8 +23,10 @@ reservationRouter
   })
   .post(checkReservation, assignParking, async (req, res) => {
     const inserted = await createReservation(req.body);
+    console.log(inserted[0].id)
     if (inserted) {
       res.sendStatus(201);
+      sendEmail(inserted[0].id);
     } else {
       res.sendStatus(500);
     }

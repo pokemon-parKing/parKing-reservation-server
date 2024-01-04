@@ -1,7 +1,8 @@
-const supabase = require("../db.js");
 require("dotenv").config();
+const supabase = require("../db.js");
 const nodemailer = require("nodemailer");
-const { convertTime } = require("../lib/convertTime.js");
+const { generateAndStoreQRCode } = require('./qrGeneratorController.js');
+const emailTemplate = require('../lib/emailTemplate.js');
 
 /*
   params are based on user's input,
@@ -168,53 +169,26 @@ const updateReservation = async (query) => {
 
 const sendEmail = async (reservationId) => {
   try {
-    const { data: combinedData, error: combinedError } = await supabase
-      .from("reservations")
+    const fullPath = await generateAndStoreQRCode(reservationId);
+
+    const [{ data: combinedData, error: combinedError }, { data: qrData, error: qrError }] = await Promise.all([
+      supabase.from("reservations")
       .select(
-        `
-        id,
+        `id,
         parking_spot_id,
         date,
         time,
         status,
         user_id:accounts(id, email),
-        garage_id:garages(id, name, address, city, state, country, zip)
-      `
+        garage_id:garages(id, name, address, city, state, country, zip)`
       )
       .eq("id", reservationId)
-      .single();
+      .single(),
+      supabase.storage.from("qrcodes").getPublicUrl(`${reservationId}.png`)
+    ])
 
-    if (combinedError) {
-      console.error("Error querying Supabase:", combinedError.message);
+    if (combinedError || qrError) {
       throw new Error("Internal Server Error");
-    }
-
-    const {
-      id,
-      user_id: { email: userEmail },
-      parking_spot_id,
-      date,
-      time,
-      status,
-      garage_id: {
-        name: garageName,
-        address: garageAddress,
-        city: garageCity,
-        state: garageState,
-        country: garageCountry,
-        zip: garageZip,
-      },
-    } = combinedData;
-
-    const convertedTime = convertTime(time);
-
-    const { data: qrData, error: qrError } = await supabase.storage
-      .from("qrcodes")
-      .getPublicUrl(`${reservationId}.png`);
-
-    if (qrError) {
-      console.error("Error downloading QR code from Supabase:", qrError);
-      return null;
     }
 
     const qr_code = qrData.publicUrl;
@@ -231,27 +205,9 @@ const sendEmail = async (reservationId) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: userEmail,
-      subject: "Reservation Confirmation",
-      html: `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1 style="color: #333;">Reservation Confirmation</h1>
-        <p>Your Reservation Details:</p>
-        <ul>
-          <li>Parking Spot ID: ${parking_spot_id}</li>
-          <li>Date: ${date}</li>
-          <li>Time: ${convertedTime}</li>
-          <li>Status: ${status}</li>
-        </ul>
-        <p>Garage Details:</p>
-        <ul>
-          <li>Name: ${garageName}</li>
-          <li>Address: ${garageAddress}, ${garageCity}, ${garageState}, ${garageCountry}, ${garageZip}</li>
-        </ul>
-        <p>QR Code:</p>
-        <img src="${qr_code}" alt="QR Code" style="max-width: 100%;">
-      </div>
-    `,
+      to: combinedData.user_id.email,
+      subject: "parKing Reservation Confirmation",
+      html: emailTemplate(combinedData, qr_code),
     };
 
     const info = await transporter.sendMail(mailOptions);
