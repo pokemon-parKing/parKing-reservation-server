@@ -11,6 +11,7 @@ const emailTemplate = require('../lib/emailTemplate.js');
 */
 const getNearestGarages = async (params) => {
   const { lat, lng } = params;
+  // 1 === about 50-60 miles
   const parameter = 2;
 
   try {
