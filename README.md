@@ -179,6 +179,80 @@ GOOGLE_KEY=(google maps api key)
   
 </details>
 
+<details>
+  <summary>/reservations/valet/:garage_id [GET]</summary>
+  <p></p>
+  <div>Request: </div>
+    
+    params: { date: string ('12-3-21'), time: integer (13) }
+
+  <p></p>
+  <div>Response:</div>
+
+    { occupied: integer, reserved: integer, available: integer }
+  
+</details>
+
+<details>
+  <summary>/reservations/valet/list/:garage_id [GET]</summary>
+  <p></p>
+  <div>Request: </div>
+    
+    params: { date: string ('12-3-21') }
+
+  <p></p>
+  <div>Response:</div>
+
+    [
+      { 
+        id: integer,
+        time: integer,
+        status: string, 
+        parking_spot_id: integer, 
+        cars: {
+          make: string,
+          color: string,
+          model: string,
+        }
+      }
+    ]
+  
+</details>
+
+<details>
+  <summary>/reservations/valet/detail/:reservation_id [GET]</summary>
+  <p></p>
+  <div>Request: </div>
+    
+    query must contain valid reservation_id
+
+  <p></p>
+  <div>Response:</div>
+
+    [
+      { 
+        status: string,
+        time: integer,
+        parking_spot_id: integer,
+        id: integer,
+        date: string,   
+        cars: {
+          make: string,
+          color: string,
+          model: string,
+          license_plate_number: string
+        },
+        accounts: {
+          email: string,
+          last_name: string,
+          first_name: string,
+          phone_number: string
+        }
+      }
+    ]
+  
+</details>
+
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
