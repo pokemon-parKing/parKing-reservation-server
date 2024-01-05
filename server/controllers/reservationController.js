@@ -1,8 +1,8 @@
 require("dotenv").config();
 const supabase = require("../db.js");
 const nodemailer = require("nodemailer");
-const { generateAndStoreQRCode } = require('./qrGeneratorController.js');
-const emailTemplate = require('../lib/emailTemplate.js');
+const { generateAndStoreQRCode } = require("./qrGeneratorController.js");
+const emailTemplate = require("../lib/emailTemplate.js");
 
 /*
   params are based on user's input,
@@ -171,21 +171,25 @@ const sendEmail = async (reservationId) => {
   try {
     const fullPath = await generateAndStoreQRCode(reservationId);
 
-    const [{ data: combinedData, error: combinedError }, { data: qrData, error: qrError }] = await Promise.all([
-      supabase.from("reservations")
-      .select(
-        `id,
+    const [
+      { data: combinedData, error: combinedError },
+      { data: qrData, error: qrError },
+    ] = await Promise.all([
+      supabase
+        .from("reservations")
+        .select(
+          `id,
         parking_spot_id,
         date,
         time,
         status,
         user_id:accounts(id, email),
         garage_id:garages(id, name, address, city, state, country, zip)`
-      )
-      .eq("id", reservationId)
-      .single(),
-      supabase.storage.from("qrcodes").getPublicUrl(`${reservationId}.png`)
-    ])
+        )
+        .eq("id", reservationId)
+        .single(),
+      supabase.storage.from("qrcodes").getPublicUrl(`${reservationId}.png`),
+    ]);
 
     if (combinedError || qrError) {
       throw new Error("Internal Server Error");
@@ -208,6 +212,13 @@ const sendEmail = async (reservationId) => {
       to: combinedData.user_id.email,
       subject: "parKing Reservation Confirmation",
       html: emailTemplate(combinedData, qr_code),
+      attachments: [
+        {
+          filename: "parKing.png",
+          path: __dirname + "/../../assets/parKing.png",
+          cid: "unique@kreata.ee",
+        },
+      ],
     };
 
     const info = await transporter.sendMail(mailOptions);
