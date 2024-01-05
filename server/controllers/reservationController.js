@@ -11,15 +11,17 @@ const emailTemplate = require('../lib/emailTemplate.js');
 */
 const getNearestGarages = async (params) => {
   const { lat, lng } = params;
+  // 1 === about 50-60 miles
+  const parameter = 2;
 
   try {
     const { data, error } = await supabase
       .from("garages")
       .select()
-      .filter("lat", "gte", +lat - 0.5)
-      .filter("lat", "lte", +lat + 0.5)
-      .filter("lng", "gte", +lng - 0.5)
-      .filter("lng", "lte", +lng + 0.5);
+      .filter("lat", "gte", +lat - parameter)
+      .filter("lat", "lte", +lat + parameter)
+      .filter("lng", "gte", +lng - parameter)
+      .filter("lng", "lte", +lng + parameter);
 
     if (error) throw error;
 
