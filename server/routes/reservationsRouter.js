@@ -1,12 +1,12 @@
 const reservationRouter = require("express").Router();
 const {
   getNearestGarages,
-  testAllReservations,
   createReservation,
   getAllReservations,
   getReservation,
   updateReservation,
   sendEmail,
+  getReservationData
 } = require("../controllers/reservationController.js");
 const assignParking = require("../middleware/assignParking.js");
 const checkReservation = require("../middleware/checkReservation.js");
@@ -68,15 +68,6 @@ reservationRouter.route("/garage/:garage_id").get(async (req, res) => {
   }
 });
 
-reservationRouter.route("/test").get(async (req, res) => {
-  const list = await testAllReservations(req.query);
-  if (list) {
-    res.status(200).json(list);
-  } else {
-    res.sendStatus(500);
-  }
-});
-
 reservationRouter.route("/email/:id").post(async (req, res) => {
   try {
     await sendEmail(req.params.id);
@@ -86,5 +77,15 @@ reservationRouter.route("/email/:id").post(async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+reservationRouter.route('/getReservationData/:garage_id').get(async (req, res) => {
+  const list = await getReservationData(+req.params.garage_id);
+
+  if (list) {
+    res.status(200).json(list);
+  } else {
+    res.sendStatus(500);
+  }
+})
 
 module.exports = reservationRouter;

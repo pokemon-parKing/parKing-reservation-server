@@ -25,4 +25,34 @@ const createGeocode = (address) => {
   })
 };
 
-module.exports = { createGeocode };
+const calcDistances = (origin, data) => {
+  const destinations = data.map(garage => {
+    return `${garage.lat},${garage.lng}`
+  })
+
+  return new Promise((resolve, reject) => {
+    const query = {
+      params: {
+        key: process.env.GOOGLE_KEY,
+        units: 'imperial',
+        origins: [origin],
+        destinations
+      }
+    }
+    google.distancematrix(query)
+      .then(results => {
+        const convertedMetrics = results.data.rows[0].elements.map(metrics => {
+          return { distance: metrics.distance.text, duration: metrics.duration.text };
+        })
+        resolve(convertedMetrics);
+      })
+      .catch(error => {
+        console.log(error);
+        reject(error);
+      })
+  })
+}
+
+
+
+module.exports = { createGeocode, calcDistances };
