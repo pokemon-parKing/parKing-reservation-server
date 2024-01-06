@@ -3,6 +3,7 @@ const supabase = require("../db.js");
 const nodemailer = require("nodemailer");
 const { generateAndStoreQRCode } = require("./qrGeneratorController.js");
 const emailTemplate = require("../lib/emailTemplate.js");
+const { calcDistances } = require('../lib/googleapi.js');
 
 /*
   params are based on user's input,
@@ -25,7 +26,13 @@ const getNearestGarages = async (params) => {
 
     if (error) throw error;
 
-    return await data;
+    const convertedMetrics = await calcDistances(`${lat},${lng}`, data);
+
+    const combinedData = data.map((garage, index) => {
+      return {...garage, ...convertedMetrics[index]}
+    })
+
+    return await combinedData;
   } catch (error) {
     console.log(error);
     return null;
@@ -43,7 +50,7 @@ const getReservation = async (id) => {
       .select()
       .eq("id", id)
       .single();
-
+    console.log(data);
     if (error) throw error;
 
     return await data;
@@ -94,25 +101,6 @@ const getAllReservations = async (query) => {
     // })
 
     return await list;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
-
-/*
-  PURELY FOR TESTING - to be deleted in production
-*/
-const testAllReservations = async (garage_id) => {
-  try {
-    const { data, error } = await supabase
-      .from("reservations")
-      .select()
-      .eq("garage_id", garage_id);
-
-    if (error) throw error;
-
-    return await data;
   } catch (error) {
     console.log(error);
     return null;
@@ -232,12 +220,26 @@ const sendEmail = async (reservationId) => {
   }
 };
 
+const getReservationData = async (garage_id) => {
+  try {
+    const { data, error } = await supabase
+      .rpc('get_reservation_summary', { garage_id });
+
+    if (error) throw error;
+
+    return await data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 module.exports = {
   getNearestGarages,
   getAllReservations,
-  testAllReservations,
   createReservation,
   updateReservation,
   getReservation,
   sendEmail,
+  getReservationData
 };
