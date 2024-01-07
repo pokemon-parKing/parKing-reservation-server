@@ -227,7 +227,12 @@ const getReservationData = async (garage_id) => {
 
     if (error) throw error;
 
-    return await data;
+    const list = {};
+    data.forEach(total => {
+      list[total.reservation_date] = total.total_reservations;
+    })
+
+    return await list;
   } catch (error) {
     console.log(error);
     return null;
