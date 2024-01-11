@@ -259,6 +259,7 @@ GOOGLE_KEY=(google maps api key)
 
 
 # Database Schema
+<a id='database-schema'></a>
 ![Schema](https://github.com/pokemon-parKing/parKing-reservation-server/assets/144174704/848648c3-4682-4b17-a270-6231a65031de)
 
 
