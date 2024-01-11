@@ -26,6 +26,9 @@
     <li>
       <a href="#endpoints">Endpoints</a>
     </li>
+    <li>
+      <a href="#database-schema">Database Schema</a>
+    </li>
   </ol>
 </details>
 
